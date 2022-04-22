@@ -1,8 +1,7 @@
 package br.com.everson.payrollapi.resources;
 
 import br.com.everson.payrollapi.domain.Payroll;
-import br.com.everson.payrollapi.domain.User;
-import br.com.everson.payrollapi.feignClients.UserFeign;
+import br.com.everson.payrollapi.services.PayroollService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,20 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/payments")
 public class PayrollResource {
 
-    private final UserFeign userFeign;
+    private final PayroollService service;
 
     @GetMapping(value = "/{workerId}")
     public ResponseEntity<Payroll> getPayment(@PathVariable Long workerId, @RequestBody Payroll payment) {
-        User user = userFeign.findById(workerId).getBody();
+        return ResponseEntity.ok().body(service.getPayment(workerId, payment));
 
-        return ResponseEntity.ok().body(
-                new Payroll(
-                        user.getName(),
-                        payment.getDescription(),
-                        user.getHourPrice(),
-                        payment.getWorkedHours(),
-                        user.getHourPrice() * payment.getWorkedHours())
-        );
 
     }
 
