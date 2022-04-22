@@ -3,6 +3,7 @@ package br.com.everson.userapi.services.impl;
 import br.com.everson.userapi.domain.User;
 import br.com.everson.userapi.repositories.UserRepository;
 import br.com.everson.userapi.services.UserService;
+import br.com.everson.userapi.services.exceptions.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        return repository.findById(id).orElse(null);
+
+        return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Object not found!"));
     }
 
     @Override
